@@ -1,0 +1,100 @@
+Started by user admin
+Obtained Jenkinsfile from git https://github.com/UST-SEIS665/hw11-seis665-02-spring2019-nyaundid.git
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] node
+Running on c44184e64bfd in /workspace/docker-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Setup)
+[Pipeline] git
+Fetching changes from the remote Git repository
+Checking out Revision 58c1baa5dfcee4295efaba7ca983fdda94e693a7 (refs/remotes/origin/master)
+Commit message: "Create console.txt"
+[Pipeline] sh
++ aws s3 cp s3://jenkinsw12/classweb.html /workspace/docker-pipeline/index.html
+ > git rev-parse --is-inside-work-tree # timeout=10
+ > git config remote.origin.url https://github.com/UST-SEIS665/hw11-seis665-02-spring2019-nyaundid.git # timeout=10
+Fetching upstream changes from https://github.com/UST-SEIS665/hw11-seis665-02-spring2019-nyaundid.git
+ > git --version # timeout=10
+using GIT_ASKPASS to set credentials access-token
+ > git fetch --tags --progress https://github.com/UST-SEIS665/hw11-seis665-02-spring2019-nyaundid.git +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 58c1baa5dfcee4295efaba7ca983fdda94e693a7
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D master # timeout=10
+ > git checkout -b master 58c1baa5dfcee4295efaba7ca983fdda94e693a7
+ > git rev-list --no-walk 87b139cc3feb88856124a53280d1e2249a8eb0cd # timeout=10
+Completed 53 Bytes/53 Bytes (1017 Bytes/s) with 1 file(s) remaining
+download: s3://jenkinsw12/classweb.html to ./index.html            
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] sh
++ docker build -t classweb:1.0 .
+Sending build context to Docker daemon  30.45MB
+
+Step 1/7 : FROM nginx
+ ---> 27a188018e18
+Step 2/7 : RUN apt-get update -y
+ ---> Using cache
+ ---> ce90f8f1ba60
+Step 3/7 : RUN apt-get install figlet -y
+ ---> Using cache
+ ---> af94cef3f3d0
+Step 4/7 : ENTRYPOINT ["figlet", "-f", "script"]
+ ---> Using cache
+ ---> 29cfced9227f
+Step 5/7 : LABEL maintainer="DARIUS NYAUNDI <darius.nyaundi@yahoo.com>"
+ ---> Using cache
+ ---> 4f592ca92838
+Step 6/7 : EXPOSE 80
+ ---> Using cache
+ ---> 0c194f2e546b
+Step 7/7 : COPY dist /usr/share/nginx/html
+ ---> Using cache
+ ---> 1f6366cb21b2
+Successfully built 1f6366cb21b2
+Successfully tagged classweb:1.0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
++ curl -s 172.17.0.3
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+[Pipeline] sh
++ docker inspect --format {{.NetworkSettings.IPAddress}} classweb1
+172.17.0.3
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
